@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WanderWise AI</title>
+  <link rel="icon" href="./img/chatbot.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="logo">
+      <a href="/">WanderWise AI</a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+    </div>
+  </div>
+
+  <div class="container chatbot-section">
+    <h3 class="text-center mb-4">Adventure Planner Chatbot</h3>
+
+    <div class="media bot-info p-3 rounded shadow-sm mb-3">
+      <img src="./img/chatbot.png" class="rounded-circle img-thumbnail me-3" width="75" alt="Chatbot Icon" />
+      <div class="media-body">
+        <h5>WanderWise</h5>
+        <span class="status-online">online</span>
+      </div>
+    </div>
+
+    <div id="chatContainer" class="chat-box border rounded mb-3"></div>
+
+    <div class="input-group mb-2">
+      <input id="textbox" type="text" class="form-control" placeholder="Type your adventure idea...">
+      <button id="sendBtn" type="button" class="btn btn-primary">Send</button>
+    </div>
+
+    <p class="text-muted">
+      Try asking: 
+      <em>"Plan a hiking trip in India"</em>, 
+      <em>"Best destinations for scuba diving"</em>, 
+      <em>"Suggest an offbeat trek"</em>
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./js/script.js"></script>
+</body>
+</html>
