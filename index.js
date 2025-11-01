@@ -1,5 +1,4 @@
 const express=require('express');
-const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
@@ -9,7 +8,7 @@ const port=3000;
 
 //Middleware
 app.use(express.static('public')); //it will allow app to use public folder for html
-app.use(bodyParser.json());
+app.use(express.json()); //to parse json data
 app.set('view engine','ejs');    //setting ejs
 
 // Gemini API setup
