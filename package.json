@@ -12,6 +12,8 @@
   "description": "This is a Adventure Planner AI chatbot named WanderWise that uses the Google Generative AI API to generate responses to user queries.",
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
+    "axios": "^1.13.2",
+    "cohere-ai": "^7.20.0",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0"

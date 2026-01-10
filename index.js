@@ -1,6 +1,6 @@
 const express=require('express');
 const dotenv = require('dotenv');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+// const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 dotenv.config();
 const app = express();
@@ -12,8 +12,16 @@ app.use(express.json()); //to parse json data
 app.set('view engine','ejs');    //setting ejs
 
 // Gemini API setup
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// const model = genAI.getGenerativeModel({ model: "gemini-3-flash" });
+
+// Cohere API setup
+const { CohereClient } = require("cohere-ai");
+
+const cohere = new CohereClient({
+  token: process.env.COHERE_API_KEY,
+});
+
 
 
 app.listen(port,()=>{
@@ -36,48 +44,86 @@ app.get("/contact",(req,res)=>{
 });
 
 
+// app.post('/chat', async (req, res) => {
+//   const userMessage = req.body.message;
+
+//   try {
+//     const chat = model.startChat({
+//       history: [
+//         {
+//           role: "user",
+//           parts: [{
+//             text: `
+// You're WanderWise — an intelligent chatbot created with love by Anup Pandey.
+// You specialize in adventure trip planning and always give detailed, real, and safe recommendations.
+
+// Your functions:
+// - Recommend destinations and activities (trekking, beaches, wildlife, extreme sports, etc.)
+// - Suggest real locations (e.g., Rishikesh for rafting, Goa for water sports)
+// - Give packing lists, travel tips, safety notes, and day-by-day itineraries
+// - Estimate budgets and recommend travel & stay options
+// - If user asks unrelated questions, reply politely: "I specialize in adventure trip planning!"
+
+// Always:
+// - Be friendly and concise
+// - Encourage responsible tourism
+// - Work in single-turn conversations (don’t ask extra questions)
+//             `
+//           }]
+//         },
+//         {
+//           role: "model",
+//           parts: [{
+//             text: "Got it! I'm WanderWise – your personal adventure planner, ready to help you design your next thrilling journey!"
+//           }]
+//         }
+//       ]
+//     });
+
+//     const result = await chat.sendMessage(userMessage);
+//     const reply = result.response.text();
+//     res.json({ reply });
+
+//   } catch (error) {
+//     console.error('WanderWise SDK Error:', error);
+//     res.json({ reply: "Sorry, WanderWise can't respond right now. Please try again later." });
+//   }
+// });
+
 app.post('/chat', async (req, res) => {
   const userMessage = req.body.message;
 
   try {
-    const chat = model.startChat({
-      history: [
-        {
-          role: "user",
-          parts: [{
-            text: `
-You're WanderWise — an intelligent chatbot created with love by Anup Pandey.
-You specialize in adventure trip planning and always give detailed, real, and safe recommendations.
+    const response = await cohere.chat({
+      model: "command-xlarge-nightly",
+      message: userMessage,
+      preamble: `
+You are WanderWise — an intelligent chatbot created with love by Anup Pandey.
+You specialize in adventure trip planning.
 
-Your functions:
-- Recommend destinations and activities (trekking, beaches, wildlife, extreme sports, etc.)
-- Suggest real locations (e.g., Rishikesh for rafting, Goa for water sports)
-- Give packing lists, travel tips, safety notes, and day-by-day itineraries
-- Estimate budgets and recommend travel & stay options
-- If user asks unrelated questions, reply politely: "I specialize in adventure trip planning!"
+Your tasks:
+- Recommend adventure destinations & activities
+- Suggest real places (Rishikesh, Goa, Manali, etc.)
+- Provide itineraries, packing lists, safety tips
+- Estimate budget ranges
+- If unrelated, say: "I specialize in adventure trip planning!"
 
-Always:
-- Be friendly and concise
-- Encourage responsible tourism
-- Work in single-turn conversations (don’t ask extra questions)
-            `
-          }]
-        },
-        {
-          role: "model",
-          parts: [{
-            text: "Got it! I'm WanderWise – your personal adventure planner, ready to help you design your next thrilling journey!"
-          }]
-        }
-      ]
+Rules:
+- Friendly and concise
+- Responsible tourism
+- Single-turn response
+      `,
+      temperature: 0.7,
+      maxTokens: 400,
     });
 
-    const result = await chat.sendMessage(userMessage);
-    const reply = result.response.text();
+    const reply = response.text;
     res.json({ reply });
 
   } catch (error) {
-    console.error('WanderWise SDK Error:', error);
-    res.json({ reply: "Sorry, WanderWise can't respond right now. Please try again later." });
+    console.error("WanderWise Cohere Error:", error);
+    res.json({
+      reply: "Sorry, WanderWise can't respond right now. Please try again later."
+    });
   }
 });
