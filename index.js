@@ -15,6 +15,11 @@ app.set('view engine','ejs');    //setting ejs
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" });
 
+app.get('/health', (req, res) => {
+    res.status(200).json({
+        status: "WanderWise running successfully 🚀"
+    });
+});
 
 app.listen(port,()=>{
     console.log(`App is listening on port ${port}`);
