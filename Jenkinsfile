@@ -42,18 +42,6 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh 'docker run -d --name $CONTAINER_NAME -p 80:3000 -e GEMINI_API_KEY=$GEMINI_API_KEY $IMAGE_NAME'
-                    } else {
-                        bat 'docker run -d --name %CONTAINER_NAME% -p 80:3000 -e GEMINI_API_KEY=%GEMINI_API_KEY% %IMAGE_NAME%'
-                    }
-                }
-            }
-        }
-
         stage('Cleanup Docker') {
             steps {
                 script {
@@ -61,6 +49,18 @@ pipeline {
                         sh 'docker system prune -f'
                     } else {
                         bat 'docker system prune -f'
+                    }
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    if (isUnix()) {
+                        sh 'docker run -d --name $CONTAINER_NAME -p 80:3000 -e GEMINI_API_KEY=$GEMINI_API_KEY $IMAGE_NAME'
+                    } else {
+                        bat 'docker run -d --name %CONTAINER_NAME% -p 80:3000 -e GEMINI_API_KEY=%GEMINI_API_KEY% %IMAGE_NAME%'
                     }
                 }
             }
